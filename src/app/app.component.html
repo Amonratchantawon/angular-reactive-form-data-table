@@ -359,40 +359,6 @@
 </div>
 
 <div class="content" role="main">
-  <!-- <div *ngFor="let item of data" class="srcoll">
-    <div>{{item.name}} </div>
-  </div> -->
-  <!--   
-  <div class="scrollmenu" id="scroll">
-      <a [ngClass]="{'isSelected': item?.isSelect}" (click)="selectTab(item)" *ngFor="let item of data">{{item.name}}</a>
-  </div> -->
-
-  <!-- <image-drawing
-    [src]="imageUrl"
-    outputMimeType="'image/jpg'"
-    (save)="save($event)"
-    (cancel)="cancel()">
-  </image-drawing> -->
-
-  <!-- <table id="tableccccc"></table> -->
-
-  <!-- <table
-  id="table"
-  data-toggle="table"
-  data-toolbar="#toolbar"
-  data-filter-control="true"
-  data-show-footer="false"
-   data-hide-unused-select-options="true">
-  <thead>
-    <tr>
-      <th data-field="state" data-checkbox="true"></th>
-      <th data-field="id" data-filter-control="select">Id</th>
-      <th data-field="name" data-filter-control="select">Name</th>
-      <th data-field="city" data-filter-control="select">City (multi-select col)</th>
-      <th data-field="age" data-filter-control="select">Age</th>
-    </tr>
-  </thead>
-</table> -->
 
   <mat-card>
     <mat-card-title>
@@ -423,7 +389,7 @@
                 <td>
                   <ng-container formArrayName="deladdress">
                     <div 
-                      *ngFor="let item of deladdress(i); let iTd = index" [formGroupName]="iTd">
+                      *ngFor="let item of deladdress(i); let j = index" [formGroupName]="j">
                       <mat-form-field>
                         <input
                           type="text"
@@ -435,7 +401,7 @@
                         />
                         <mat-autocomplete #autoGroup="matAutocomplete">
                           <mat-optgroup
-                            *ngFor="let group of stateGroupOptions[iTd] | async"
+                            *ngFor="let group of stateGroupOptions[j] | async"
                             [label]="group.letter"
                           >
                             <mat-option
@@ -447,68 +413,20 @@
                           </mat-optgroup>
                         </mat-autocomplete>
                       </mat-form-field>
-                      <button mat-button color="accent" (click)="Removeitem(i,iTd)">
+                      <button mat-button color="accent" (click)="Removeitem(i,j)">
                         (-)
+                      </button>
+                      <button mat-raised-button color="link" style="background-color: black;">
+                        File
                       </button>
                     </div>
                   </ng-container>
-                  
                 <div>
-                  <a mat-raised-button color="primary" (click)="Addnewrow(i)"
-                    >Add New (+)</a
-                  >
+                  <a mat-raised-button color="primary" (click)="Addnewrow(i)">Add New (+)</a>
                 </div>
                 </td>
             </tr>
           </ng-container>
-          
-            <!-- <tr [formGroup]="reactform">
-            <td>{{reactform.controls.text.value}}</td>
-            <td>{{reactform.controls.code.value}}</td>
-            <td>{{reactform.controls.name.value}}</td>
-            <td>
-                <div formArrayName="deladdress">
-                  <div
-                    *ngFor="let item of deladdress.controls; let i = index"
-                    [formGroupName]="i"
-                  >
-                    <mat-form-field>
-                      <input
-                        type="text"
-                        matInput
-                        placeholder="States Group"
-                        formControlName="city"
-                        required
-                        [matAutocomplete]="autoGroup"
-                      />
-                      <mat-autocomplete #autoGroup="matAutocomplete">
-                        <mat-optgroup
-                          *ngFor="let group of stateGroupOptions[i] | async"
-                          [label]="group.letter"
-                        >
-                          <mat-option
-                            *ngFor="let name of group.names"
-                            [value]="name"
-                          >
-                            {{ name }}
-                          </mat-option>
-                        </mat-optgroup>
-                      </mat-autocomplete>
-                    </mat-form-field>
-                    <button mat-button color="accent" (click)="Removeitem(i)">
-                      (-)
-                    </button>
-                  </div>
-                </div>
-              <div>
-                <a mat-raised-button color="primary" (click)="Addnewrow()"
-                  >Add New (+)</a
-                >
-              </div>
-            </td>
-          </tr> -->
-
-
         </tbody>
       </table>
       
@@ -516,12 +434,4 @@
     </mat-card-content>
   </mat-card>
 
-  <!-- <button (click)="onClickBtn()">CLICK</button>
-
-
-    <canvas  id="canvas"
-    [width]="height"
-    [height]="width"
-    style="border: 1px solid black;">
-  </canvas> -->
 </div>

@@ -135,19 +135,19 @@ export class AppComponent implements OnInit{
   stateGroupOptions: Observable<StateGroup[]>[] = [];
 
   items!: FormArray;
-  // reactform = new FormGroup({
-  //   text: new FormControl('xxxxxx'),
-  //   code: new FormControl('01445'),
-  //   name: new FormControl('text', Validators.required),
-  //   deladdress: new FormArray([]),
-  // });
+  rowsDataForm!: FormArray;
 
   masterRow = [
     {
       text:'xxxx',
       code:'yyyyy',
       name: 'ccccc',
-      deladdress:[]
+      deladdress:[{city:'Alabama'}]
+    },{
+      text:'1111',
+      code:'2222',
+      name: '3333',
+      deladdress:[{city:'Alabama'}]
     },{
       text:'1111',
       code:'2222',
@@ -163,54 +163,6 @@ export class AppComponent implements OnInit{
   get rowDatas() {
     return this.rowsForm.get('rowDatas') as FormArray;
   }
-
-
-  title = 'data-table';
-
-  datas = {
-    sortable:true,
-    checkboxHeader:true,
-    paginationLoop:true,
-    search: true,
-    searchSelector:true,
-    onClickCell: (field: string,value: any,row: any,$element: any) =>{this.getData(field,value,row,$element)},
-    onDblClickCell: (
-      field: string,
-      value: any,
-      row: any,
-      $element: any
-    ): void =>{console.log(value)},
-    columns: [{
-      field: 'id',
-      title: 'Item ID',
-      checkbox:true
-    }, {
-      field: 'name',
-      title: 'Item Name',
-      cellStyle: this.cellStyleName,
-      searchable:true
-    }, {
-      field: 'price',
-      title: 'Item Price',
-      cellStyle: this.cellStylePrice,
-    }],
-    "data": [
-      {
-        "id": 0,
-        "name": "Item 0",
-        "price": "<span style='height: 25px;width: 25px;background-color: #359c61;border-radius: 50%;display: inline-block;'></span>",
-        "state":true
-      },
-      {
-        "id": 1,
-        "name": "Item 1",
-        "price": "<span style='height: 25px;width: 25px;background-color: #c06767;border-radius: 50%;display: inline-block;'></span>",
-        "state":true
-      },
-      
-    ]
-  }
-
 
   data = [{
     "id": "1",
@@ -262,74 +214,31 @@ export class AppComponent implements OnInit{
 
   private createRows(){
     try {
-      const form = this.rowsForm.get('rowDatas') as FormArray;
-      this.masterRow.forEach(row => {
-        console.log(row);
+      this.rowsDataForm = this.rowsForm.get('rowDatas') as FormArray;
+      console.log(this.rowsDataForm);
+      
+      this.masterRow.forEach((row,i) => {
         const rowObj = new FormGroup({
-          text: new FormControl('xxxxxx'),
-          code: new FormControl('01445'),
-          name: new FormControl('text'),
+          text: new FormControl(row.text),
+          code: new FormControl(row.code),
+          name: new FormControl(row.name),
           deladdress: new FormArray([]),
         });
-        form.push(rowObj);
+        this.rowsDataForm.push(rowObj);
+        // let deladdress = this.rowsDataForm.at(i).get('deladdress') as FormArray;
+        // row.deladdress.forEach((address,iAds) => {
+        //   deladdress.push(this.Genrow());
+        //   this.ManageNameControl(i,iAds);
+        // });
       });
-      console.log(form);
-      
     } catch (error) {
       console.log(error);
     }
   }
 
-  selectTab(item: any){
-    
-    this.data.forEach(element => {
-      if (element.id === item.id) {
-        element.isSelect = true;
-      } else {
-        element.isSelect = false;
-      }
-    });
-    console.log(item.isSelect);
-  }
-
-
-  getData(field: string,value: any,row: any,$element: any){
-    console.log(field);
-  }
-
-  save($event:any){
-    console.log($event);
-  }
-
-  cancel(){
-
-  }
-
   ngOnInit(): void {
     this.createRows();
   }
-
-  cellStyleName(value: any, row: any, index: number) {
-    return {
-      css: {
-        color: 'blue',
-        'text-decoration': 'underline',
-        'cursor': 'pointer',
-      }
-    }
-  }
-
-
-  cellStylePrice(value: any, row: any, index: number) {
-    return {
-      css: {
-        color: 'blue',
-        'text-decoration': 'underline',
-        'cursor': 'pointer',
-      }
-    }
-  }
-
 
   private _filterGroup(value: string) {
     if (value) {
@@ -345,7 +254,6 @@ export class AppComponent implements OnInit{
   }
 
 
-  rowsDataForm!: FormArray;
   Addnewrow(indexRow:number,) {
     this.rowsDataForm = this.rowsForm.get('rowDatas') as FormArray;
     let deladdress = this.rowsDataForm.at(indexRow).get('deladdress') as FormArray;
@@ -354,6 +262,9 @@ export class AppComponent implements OnInit{
   }
 
   ManageNameControl(indexRow: number,indexTd:number) {
+    console.log(indexRow);
+    console.log(indexTd);
+    
     this.rowsDataForm = this.rowsForm.get('rowDatas') as FormArray;
     let deladdress = this.rowsDataForm.at(indexRow).get('deladdress') as FormArray;
     this.stateGroupOptions[indexTd] = deladdress.at(indexTd).get('city')?.valueChanges.pipe(startWith(''),map(v=>this._filterGroup(v))) as Observable<StateGroup[]>
@@ -373,6 +284,7 @@ export class AppComponent implements OnInit{
 
   Genrow(): FormGroup {
     return new FormGroup({
+      texts: new FormArray([]),
       street: new FormControl('', Validators.required),
       city: new FormControl('', Validators.required),
       state: new FormControl('', Validators.required),
