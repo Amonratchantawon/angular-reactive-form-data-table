@@ -401,7 +401,7 @@
                         />
                         <mat-autocomplete #autoGroup="matAutocomplete">
                           <mat-optgroup
-                            *ngFor="let group of stateGroupOptions[j] | async"
+                            *ngFor="let group of stateGroupOptions[i][j] | async"
                             [label]="group.letter"
                           >
                             <mat-option

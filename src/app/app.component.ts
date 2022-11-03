@@ -132,7 +132,7 @@ export class AppComponent implements OnInit{
     },
   ];
 
-  stateGroupOptions: Observable<StateGroup[]>[] = [];
+  stateGroupOptions: Observable<StateGroup[]>[][] = [];
 
   items!: FormArray;
   rowsDataForm!: FormArray;
@@ -225,11 +225,11 @@ export class AppComponent implements OnInit{
           deladdress: new FormArray([]),
         });
         this.rowsDataForm.push(rowObj);
-        // let deladdress = this.rowsDataForm.at(i).get('deladdress') as FormArray;
-        // row.deladdress.forEach((address,iAds) => {
-        //   deladdress.push(this.Genrow());
-        //   this.ManageNameControl(i,iAds);
-        // });
+        let deladdress = this.rowsDataForm.at(i).get('deladdress') as FormArray;
+        row.deladdress.forEach((address,iAds) => {
+          deladdress.push(this.Genrow(address));
+          this.ManageNameControl(i,iAds);
+        });
       });
     } catch (error) {
       console.log(error);
@@ -262,12 +262,11 @@ export class AppComponent implements OnInit{
   }
 
   ManageNameControl(indexRow: number,indexTd:number) {
-    console.log(indexRow);
-    console.log(indexTd);
-    
     this.rowsDataForm = this.rowsForm.get('rowDatas') as FormArray;
     let deladdress = this.rowsDataForm.at(indexRow).get('deladdress') as FormArray;
-    this.stateGroupOptions[indexTd] = deladdress.at(indexTd).get('city')?.valueChanges.pipe(startWith(''),map(v=>this._filterGroup(v))) as Observable<StateGroup[]>
+    if (!this.stateGroupOptions[indexRow]) this.stateGroupOptions.push([])
+    this.stateGroupOptions[indexRow][indexTd] = deladdress.at(indexTd).get('city')?.valueChanges.pipe(startWith(''),map(v=>this._filterGroup(v))) as Observable<StateGroup[]>
+    console.log(this.stateGroupOptions);
   }
 
   Removeitem(index: any,it:number) {
@@ -282,16 +281,13 @@ export class AppComponent implements OnInit{
     return deladdress.controls
   }
 
-  Genrow(): FormGroup {
+  Genrow(address?:any): FormGroup {
     return new FormGroup({
       texts: new FormArray([]),
       street: new FormControl('', Validators.required),
-      city: new FormControl('', Validators.required),
+      city: new FormControl(address?address.city:'', Validators.required),
       state: new FormControl('', Validators.required),
-      zip: new FormControl(
-        '',
-        Validators.compose([Validators.required, Validators.maxLength(6)])
-      ),
+      zip: new FormControl('',Validators.compose([Validators.required, Validators.maxLength(6)])),
     });
   }
 
