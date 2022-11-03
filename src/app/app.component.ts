@@ -142,12 +142,36 @@ export class AppComponent implements OnInit{
       text:'xxxx',
       code:'yyyyy',
       name: 'ccccc',
-      deladdress:[{city:'Alabama'}]
+      deladdress:[
+        {
+          city:'Alabama',
+          texts:[
+            {
+              txt:'FFFFFFFF'
+            },
+            {
+              txt:'JJJJJJJJ'
+            }
+          ]
+        }
+        ]
     },{
       text:'1111',
       code:'2222',
       name: '3333',
-      deladdress:[{city:'Alabama'}]
+      deladdress:[
+        {
+          city:'Alabama',
+          texts:[
+            {
+              txt:'FFFFFFFF'
+            },
+            {
+              txt:'JJJJJJJJ'
+            }
+          ]
+        }
+        ]
     },{
       text:'1111',
       code:'2222',
@@ -216,7 +240,6 @@ export class AppComponent implements OnInit{
     try {
       this.rowsDataForm = this.rowsForm.get('rowDatas') as FormArray;
       console.log(this.rowsDataForm);
-      
       this.masterRow.forEach((row,i) => {
         const rowObj = new FormGroup({
           text: new FormControl(row.text),
@@ -226,11 +249,16 @@ export class AppComponent implements OnInit{
         });
         this.rowsDataForm.push(rowObj);
         let deladdress = this.rowsDataForm.at(i).get('deladdress') as FormArray;
-        row.deladdress.forEach((address,iAds) => {
-          deladdress.push(this.Genrow(address));
+        row.deladdress.forEach((_address,iAds) => {
+          deladdress.push(this.Genrow(_address));
           this.ManageNameControl(i,iAds);
+          _address.texts.forEach((txt:any,iTxt)=>{
+          let text = deladdress.at(iAds).get('texts') as FormArray;
+          text.push(this.GenTxt(txt))
+          })
         });
       });
+      console.log(this.rowsDataForm);
     } catch (error) {
       console.log(error);
     }
@@ -289,6 +317,12 @@ export class AppComponent implements OnInit{
       state: new FormControl('', Validators.required),
       zip: new FormControl('',Validators.compose([Validators.required, Validators.maxLength(6)])),
     });
+  }
+
+  GenTxt(txt?:any):FormGroup {
+    return new FormGroup({
+      txt:new FormControl(''),
+    })
   }
 
   onClickBtn(){
