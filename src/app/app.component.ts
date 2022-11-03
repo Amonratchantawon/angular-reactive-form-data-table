@@ -321,7 +321,7 @@ export class AppComponent implements OnInit{
 
   GenTxt(txt?:any):FormGroup {
     return new FormGroup({
-      txt:new FormControl(''),
+      txt:new FormControl(txt?txt:''),
     })
   }
 
